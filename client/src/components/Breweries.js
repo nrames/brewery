@@ -11,12 +11,22 @@ class Breweries extends Component {
     this.props.dispatch(fetchBreweries());
   }
 
+  displayBreweries = () => {
+    return this.props.breweries.map( brewery => {
+      return(
+        <List>
+          <List.Item>
+            {brewery.name}
+          </List.Item>  
+        </List>
+      );
+    })
+  }
+
   render() {
     return (
       <Segment basic>
-        <List>
-          Need to display breweries list
-        </List>    
+        { this.displayBreweries() }
       </Segment>
     );
   }

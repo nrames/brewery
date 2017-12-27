@@ -4,14 +4,10 @@ import {
   Segment, 
   Divider,
   Grid,
-  Image, 
-  List,
-  Menu 
 } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Beers from './Beers';
 import Breweries from './Breweries';
-import axios from 'axios';
 
 class Home extends Component {
 
