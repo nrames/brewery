@@ -8,6 +8,9 @@ gem 'brewery_db', '~> 0.2.4'
 gem 'foreman', '~> 0.84.0'
 
 group :development, :test do
+  gem 'rspec-rails'
+  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
+  gem 'database_cleaner'
   gem 'pry', '~> 0.10.4'
   gem 'dotenv-rails', '~> 2.2.1'
 end
