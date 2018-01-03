@@ -1,39 +1,74 @@
 import React, { Component } from 'react';
-import { fetchBreweries } from '../actions/breweries';
-import { List, Segment } from 'semantic-ui-react';
-import { connect } from 'react-redux';
+import { 
+  Segment,
+  Dimmer, 
+  Loader, 
+  List, 
+  Header, 
+  Button 
+} from 'semantic-ui-react';
 import axios from 'axios';
 
 class Breweries extends Component {
-  state = { breweries: [] }
+  state = { beers: [], loaded: false, page: 1, perPage: 10 };
 
   componentDidMount() {
-    this.props.dispatch(fetchBreweries());
+    axios.get(`/api/all_breweries?page=${this.state.page}&per_page=${this.state.perPage}`)
+      .then( res => {
+        this.setState({ breweries: res.data.entries, loaded: true })
+      })
+      .catch( err => {
+        console.log(err);
+      });
+  }
+  
+  nextBrewery = () => {
+    axios.get(`/api/all_breweries?page=${this.state.page + 1}&per_page=${this.state.perPage}`)
+      .then( res => {
+        this.setState({ breweries: res.data.entries, loaded: true, page: this.state.page + 1 })
+      })
+      .catch( err => {
+        console.log(err);
+      });
+  }
+
+  prevBrewery = () => {
+    axios.get(`/api/all_breweries?page=${this.state.page - 1}&per_page=${this.state.perPage}`)
+    .then( res => {
+      this.setState({ breweries: res.data.entries, loaded: true, page: this.state.page - 1 })
+    })
+    .catch( err => {
+      console.log(err);
+    });
   }
 
   displayBreweries = () => {
-    return this.props.breweries.map( brewery => {
+    return this.state.breweries.map( brewery => {
       return(
-        <List>
-          <List.Item>
-            {brewery.name}
-          </List.Item>  
-        </List>
-      );
-    })
+        <List.Item>
+          <List.Icon name='beer' size='large' verticalAlign='middle' />
+          {brewery.name}
+        </List.Item>
+      )
+    });
   }
 
   render() {
-    return (
-      <Segment basic>
-        { this.displayBreweries() }
-      </Segment>
-    );
+    if(this.state.loaded)
+      return(
+        <Segment basic>
+          { this.displayBreweries() }
+          <Button onClick={this.prevBrewery}>Previous Page</Button>
+          <Button onClick={this.nextBrewery}>Next Page</Button>
+        </Segment>
+      )
+    else
+      return(
+        <Dimmer active>
+          <Loader>Loading Breweries...</Loader>
+        </Dimmer>
+      )
   }
 }
 
-const mapStateToProps = (state) => {
-  return { breweries: state.breweries };
-}
-
-export default connect(mapStateToProps)(Breweries);
+export default Breweries;
